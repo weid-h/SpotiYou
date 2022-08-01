@@ -11,7 +11,7 @@ export type MigratorState = {
   SpotifyAuth: AuthState;
   AuthenticateSpotify: (token: string) => void;
   SetSpotifyVerifier: (verifier: string) => void;
-  SpotifyPlaylists: { name: string; id: string }[];
+  SpotifyPlaylists: { name: string; id: string; tracksLink: string }[];
   SpotifyPlaylistsSelected: boolean;
   SetSpotifyPlaylists: (
     playlists: { name: string; id: string; tracksLink: string }[]
@@ -19,6 +19,7 @@ export type MigratorState = {
   YoutubeAuth: AuthState;
   AuthenticateYoutube: (token: string) => void;
   SetYoutubeVerifier: (verifier: string) => void;
+  ClearState: () => void;
 };
 
 export const useMigratorStore = create<MigratorState>()(
@@ -61,6 +62,13 @@ export const useMigratorStore = create<MigratorState>()(
         set((state) => ({
           ...state,
           YoutubeAuth: { ...state.YoutubeAuth, Verifier: verifier },
+        })),
+      ClearState: () =>
+        set((state) => ({
+          SpotifyAuth: { Authenticated: false, Token: "", Verifier: "" },
+          YoutubeAuth: { Authenticated: false, Token: "", Verifier: "" },
+          SpotifyPlaylists: [],
+          SpotifyPlaylistsSelected: false,
         })),
     }))
   )

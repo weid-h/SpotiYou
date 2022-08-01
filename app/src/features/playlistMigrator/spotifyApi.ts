@@ -25,7 +25,7 @@ export const getPlaylists = async (token: string) => {
 
   let data = response.data as playlistResponse;
 
-  playlists.concat(data.items);
+  playlists = playlists.concat(data.items);
 
   while (data.next) {
     const response = await axios.get(data.next, {
@@ -42,8 +42,10 @@ export const getPlaylists = async (token: string) => {
 
 type tracksResponse = {
   items: {
-    name: string;
-    artists: { name: string }[];
+    track: {
+      name: string;
+      artists: { name: string }[];
+    };
   }[];
   limit: number;
   offset: number;
@@ -57,13 +59,17 @@ export const getTracks = async (token: string, tracksLink: string) => {
   });
 
   let tracks: {
-    name: string;
-    artists: { name: string }[];
+    track: {
+      name: string;
+      artists: { name: string }[];
+    };
   }[] = [];
 
   let data = response.data as tracksResponse;
 
-  tracks.concat(data.items);
+  console.log("Track data ", data);
+
+  tracks = tracks.concat(data.items);
 
   while (data.next) {
     const response = await axios.get(data.next, {
@@ -75,5 +81,5 @@ export const getTracks = async (token: string, tracksLink: string) => {
     tracks = tracks.concat(data.items);
   }
 
-  return tracks;
+  return tracks.map((track) => track.track);
 };
